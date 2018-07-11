@@ -25,7 +25,10 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+            "src/assets/vendors-sdk.min.js",
+            "src/assets/rainbow-sdk.min.js"
+            ]
           },
           "configurations": {
             "production": {

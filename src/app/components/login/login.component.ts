@@ -5,7 +5,7 @@ import { CoreService } from '../../services/core.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.less']
 })
 export class LoginComponent implements OnInit {
   hide = true;
@@ -23,8 +23,8 @@ export class LoginComponent implements OnInit {
     this.coreService.runRainbow(this.form.value['login'], 
                                 this.form.value['password']);
     setTimeout (() => {
-                                  console.log(this.coreService.account);
-                               }, 2000);
+      console.log(this.coreService.sdk.account);
+    }, 2000);
   }
   ngOnInit() {
 

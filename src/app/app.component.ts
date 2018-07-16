@@ -10,7 +10,6 @@ import { CoreService } from './services/core.service';
 export class AppComponent implements OnInit {
   text:string;
   ngOnInit() {
-    //this.text = this.coreService.account.userId;
   }
   constructor(private coreService: CoreService) {
   }

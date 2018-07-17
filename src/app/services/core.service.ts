@@ -7,10 +7,8 @@ import { AccountModel } from '../models/account.model';
 })
 export class CoreService {
   sdk = new SDK();
+ 
   constructor() {
-  }
-  runRainbow(login:string, password:string){
-    console.log(login + ' ' + password);
-    this.sdk.initialize(login, password);
+    this.sdk.initialize();
   }
 }

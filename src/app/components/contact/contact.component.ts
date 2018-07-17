@@ -8,7 +8,7 @@ import { ContactModel } from '../../models/contact.model';
   styleUrls: ['./contact.component.less']
 })
 export class ContactComponent implements OnInit {
-  @Input('object') contact: ContactModel;
+  @Input('value') contact: ContactModel;
   constructor(private coreService: CoreService) { 
   }
 

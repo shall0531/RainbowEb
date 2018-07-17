@@ -1,32 +1,30 @@
 export class ContactModel{
     jid:string;
-    lastname: string;
+    //lastname: string;
     avatar: string;
-    name: {
-        value:string;
-    }
+    name:string;
     imStatus: string;
-    conversation: Object;
-    color: string;
+    //conversation: Object;
+    //color: string;
     lastActivityMessage:string;
     displayName: string;
-    constructor(jid:string,
-        lastname: string,
+    /*constructor(jid:string,
+        //lastname: string,
         avatar: string,
-        value: string,
+        name: string,
         imStatus: string,
-        conversation: Object,// todo: object conversation
+        conversation: Object,//TODO: object conversation
         color: string,
         lastActivityMessage:string,
         displayName: string){
             this.jid = jid;
-            this.lastname = lastname;
+            //this.lastname = lastname;
             this.avatar = avatar;
-            this.name.value = value;
+            this.name = name;
             this.imStatus = imStatus;
             this.conversation = conversation;
             this.color = color;
             this.lastActivityMessage = lastActivityMessage;
-            this.displayName = this.displayName;
-        }
+            this.displayName = displayName;
+        }*/
 }

@@ -1,9 +1,9 @@
 <div class="grid-4">
-  <div class="left col-1" >
-      <app-contact></app-contact> 
+  <div class="left">
+      <app-contact  *ngFor="let contact of contacts" [value]="contact"></app-contact> 
   </div>
   
-  <div>
+  <div class="col-3">
     <app-conversation></app-conversation>
   </div>
 </div>

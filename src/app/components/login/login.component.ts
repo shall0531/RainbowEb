@@ -5,7 +5,7 @@ import { CoreService } from '../../services/core.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.less']
 })
 export class LoginComponent implements OnInit {
   hide = true;
@@ -17,14 +17,13 @@ export class LoginComponent implements OnInit {
       login: ['', Validators.required],
       password: ['', Validators.required]
     });
+    
   }
 
   run() {
-    this.coreService.runRainbow(this.form.value['login'], 
-                                this.form.value['password']);
-    setTimeout (() => {
-                                  console.log(this.coreService.account);
-                               }, 2000);
+    this.coreService.sdk._onReady.subscribe(value=>{
+      this.coreService.sdk.onReady(this.form.value['login'],this.form.value['password']);
+    });
   }
   ngOnInit() {
 

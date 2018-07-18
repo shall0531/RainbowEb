@@ -41,12 +41,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { UserComponent } from './components/user/user.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { ConversationComponent } from './components/conversation/conversation.component';
 import { CoreService } from './services/core.service';
 import { LoginComponent } from './components/login/login.component';
 import { MainComponent } from './components/main/main.component';
+import { UserComponent } from './components/user/user.component';
+import { ConversationComponent } from './components/conversation/conversation.component';
+import { AppRoutingModule } from './app-routing.module';
 
 const materialModule=[MatAutocompleteModule,
   MatBadgeModule,
@@ -100,7 +101,8 @@ const materialModule=[MatAutocompleteModule,
     ReactiveFormsModule,
     BrowserModule,
     BrowserAnimationsModule,
-    ...materialModule
+    ...materialModule,
+    AppRoutingModule
   ],
   exports: [...materialModule
     ],

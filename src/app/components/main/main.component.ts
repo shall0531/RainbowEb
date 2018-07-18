@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreService } from '../../services/core.service';
 import { ContactModel } from '../../models/contact.model';
+import { StateService } from '../../services/state.service';
 
 @Component({
   selector: 'app-main',
@@ -9,17 +10,26 @@ import { ContactModel } from '../../models/contact.model';
 })
 export class MainComponent implements OnInit {
   contacts = [];
-  constructor(private coreService: CoreService) {
-    this.coreService.sdk._onReady.subscribe(value => {
-      this.coreService.sdk.onReady('liu.xiaoyi90@gmail.com', 'Pass_test_1234');
-    });
+  constructor(private coreService: CoreService,
+       private stateService: StateService) {
+    
   }
 
+
   ngOnInit() {
-    this.contacts = this.getContacts();
+    this.getContacts();
   }
-  getContacts() {
-    return [{
+  getContacts(){
+    this.stateService.contacts.forEach(element => {
+      this.contacts.push({
+        jid: element['jid'],
+      avatar:element['avatar'],
+      name: element['name']['value'],
+      imStatus: element['imStatus'],
+      lastActivityMessage: element['_lastActivityMessage'],
+      displayName: element['_displayName']
+    });
+    /*return [{
       jid: 'id',
       avatar:'',
       name: 'jon snow',

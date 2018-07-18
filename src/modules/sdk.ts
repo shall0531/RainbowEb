@@ -1,5 +1,8 @@
 import { AccountModel } from "../app/models/account.model";
 import { Observable } from "rxjs";
+import { ContactModel } from "../app/models/contact.model";
+import { CoreService } from "../app/services/core.service";
+import { StateService } from "../app/services/state.service";
 declare var rainbowSDK: any;
 declare var angular: any;
 declare var $: any;
@@ -14,18 +17,20 @@ export class SDK {
     selectedContact: any;
     _onReady: Observable<any>;
     _onLoaded: Observable<any>;
-    account:AccountModel;
-    contacts = [];
-
-    onReady(login, password):void {
+    _contacts: Observable<any>;
+    account:any;
+    contacts:any;
+    constructor(private stateService: StateService){
+    }
+    onReady(login, password): Promise<void>{
         //var myRainbowLogin = "liu.xiaoyi90@gmail.com";       // Replace by your login
         //var myRainbowPassword = "Pass_test_1234"; // Replace by your password
-        const self = this;
-        rainbowSDK.connection.signin(login, password)
+        return rainbowSDK.connection.signin(login, password)
             .then((account) =>{
-                this.account = account.account;
-                this.contacts = rainbowSDK.contacts.getAll();
-            })
+                this.stateService.signin = true; 
+                this.stateService.contacts = rainbowSDK.contacts.getAll();
+                return new Promise<void>(resolve=>resolve());
+                })
             .catch((err) =>{
                 console.log('connextion fail');
             });
@@ -103,6 +108,11 @@ export class SDK {
         });
         this._onLoaded.subscribe(value=>{
             this.onLoaded();
+        });
+
+        this._contacts = new Observable((observer) => {
+            observer.next(rainbowSDK.contacts);
+            observer.complete();
         });
 
         rainbowSDK.load();

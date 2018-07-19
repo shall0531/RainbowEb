@@ -17,21 +17,23 @@ export class SDK {
     selectedContact: any;
     _onReady: Observable<any>;
     _onLoaded: Observable<any>;
-    _contacts: Observable<any>;
-    account:any;
-    contacts:any;
-    constructor(private stateService: StateService){
+    _recieveMessage: Observable<any>;
+    conversation: any;
+    account: any;
+    contacts: any;
+    constructor(private stateService: StateService) {
     }
-    onReady(login, password): Promise<void>{
+    onReady(login, password): Promise<void> {
         //var myRainbowLogin = "liu.xiaoyi90@gmail.com";       // Replace by your login
         //var myRainbowPassword = "Pass_test_1234"; // Replace by your password
         return rainbowSDK.connection.signin(login, password)
-            .then((account) =>{
-                this.stateService.signin = true; 
-                this.stateService.contacts = rainbowSDK.contacts.getAll();
-                return new Promise<void>(resolve=>resolve());
-                })
-            .catch((err) =>{
+            .then((account) => {
+                this.stateService.signin = true;
+                this.stateService.account = account.account;
+                console.log(account);
+                return new Promise<void>(resolve => resolve());
+            })
+            .catch((err) => {
                 console.log('connextion fail');
             });
     };
@@ -44,16 +46,16 @@ export class SDK {
         });
     };
     /* Handler called when the user clicks on a contact */
-    onContactSelected(contactId) {
-        this.selectedContact = rainbowSDK.contacts.getContactById(contactId);
-
+    onContactSelected(contactJid): Promise<void> {
+        this.selectedContact = rainbowSDK.contacts.getContactByJID(contactJid);
+        return new Promise<void>((resolve) => resolve());
         // Cont act not found locally, ask to the server
-        if (!this.selectedContact) {
-            rainbowSDK.contacts.searchContactById(contactId).then(function (contact) {
+        /*if (!this.selectedContact) {
+            rainbowSDK.contacts.searchContactById(contactJid).then(function (contact) {
                 this.selectedContact = contact;
 
-                if (this.selectedContact) {
-                    // Ok, we have the contact object
+                /*if (this.selectedContact) {
+                    
                 }
                 else {
                     // Strange, no contact with that Id. Are you sure of that id ?...
@@ -62,12 +64,11 @@ export class SDK {
             }).catch((err) => {
                 //Something when wrong with the server. Handle the trouble here
             });
-        }
+        }*/
     };
-    /* Callback for handling the event 'RAINBOW_ONCONNECTIONSTATECHANGED' */
 
-    onConnectionStateChangeEvent(event, status){
-       
+    onConnectionStateChangeEvent(event, status) {
+
         switch (status) {
             case rainbowSDK.connection.RAINBOW_CONNECTIONCONNECTED:
                 // The state of the connection has changed to "connected" which means that your application is now connected to Rainbow
@@ -88,8 +89,8 @@ export class SDK {
 
         var applicationID = "liu_bis.xiaoyi90@gmail.com",
             applicationSecret = "Pass_test_1234";
-        
-        
+
+
         /* Bootstrap the SDK */
         angular.bootstrap(document, ["sdk"]).get("rainbowSDK");
         this._onReady = new Observable((observer) => {
@@ -97,30 +98,48 @@ export class SDK {
             observer.complete();
         });
         // Subscribe to Rainbow connection change
-       // $(document).on(rainbowSDK.connection.RAINBOW_ONCONNECTIONSTATECHANGED, this.onConnectionStateChangeEvent);
-        /* Listen to the SDK event RAINBOW_ONREADY */
-        //$(document).on(rainbowSDK.RAINBOW_ONREADY, this.onReady);
-        /* Listen to the SDK event RAINBOW_ONLOADED */
-       // $(document).on(rainbowSDK.RAINBOW_ONLOADED, this.onLoaded);
+        // $(document).on(rainbowSDK.connection.RAINBOW_ONCONNECTIONSTATECHANGED, this.onConnectionStateChangeEvent);
         this._onLoaded = new Observable((observer) => {
             observer.next(rainbowSDK.RAINBOW_ONLOADED);
-            observer.complete();
+            
         });
-        this._onLoaded.subscribe(value=>{
+        this._onLoaded.subscribe(value => {
             this.onLoaded();
         });
 
-        this._contacts = new Observable((observer) => {
-            observer.next(rainbowSDK.contacts);
-            observer.complete();
+        this._recieveMessage = new Observable((observer) => {
+            observer.next(rainbowSDK.im.Rainbow_ONNEWIMMESSAGERECEIVED);
         });
+
+        $(document).on(rainbowSDK.im.RAINBOW_ONNEWIMMESSAGERECEIVED, this.onNewMessageReceived);
 
         rainbowSDK.load();
     }
+    
+    
 
     get version() {
         return rainbowSDK.version;
     }
+
+    get allContacts() {
+        return rainbowSDK.contacts.getAll();
+    }
+    getConversationByContact(): Promise<any> {
+        return rainbowSDK.conversations.openConversationForContact(this.selectedContact).then(function (conversation) {
+            return new Promise<any>(resolve => resolve(conversation));
+        }).catch(function (err) {
+
+        });
+    }
+    displayMessage(conversation: any): Promise<any> {
+        const currentPage = 0;
+        return rainbowSDK.im.getMessagesFromConversation(conversation, 30);
+    }
+    get rainbowSDK(): Object{
+        return rainbowSDK;
+    }
+
 };
 
 /*let sdk = new SDK();

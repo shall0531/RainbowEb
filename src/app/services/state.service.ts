@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { AccountModel } from '../models/account.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StateService {
   _signin: boolean;
-  _contacts: boolean;
+  _account: AccountModel;
   constructor() { }
 
   get signin():boolean{
@@ -14,10 +15,10 @@ export class StateService {
   set signin(signin: boolean){
     this._signin = signin;
   }
-  get contacts(){
-    return this._contacts;
+  get account(){
+    return this._account;
   }
-  set contacts(contacts:any){
-    this._contacts = contacts;
+  set account(account:any){
+    this._account = account;
   }
 }

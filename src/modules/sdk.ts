@@ -110,9 +110,6 @@ export class SDK {
         this._recieveMessage = new Observable((observer) => {
             observer.next(rainbowSDK.im.Rainbow_ONNEWIMMESSAGERECEIVED);
         });
-
-        $(document).on(rainbowSDK.im.RAINBOW_ONNEWIMMESSAGERECEIVED, this.onNewMessageReceived);
-
         rainbowSDK.load();
     }
     

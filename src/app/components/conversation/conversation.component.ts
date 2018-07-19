@@ -22,8 +22,10 @@ export class ConversationComponent implements OnInit {
   ngOnInit() {
   }
   sendMessage(){
-    this.coreServcie.sdk.rainbowSDK['im'].sendMessageToConversation(this.conversation, this.form.value['text'] + " read!");
-    console.log(this.form.value['text']);
+    if(this.form.value['text']){
+      this.coreServcie.sdk.rainbowSDK['im'].sendMessageToConversation(this.conversation, this.form.value['text'] + " from test!");
+    }
+    this.form.controls['text'].setValue('');
   }
   displayMessage(conversation){
     this.conversation = conversation;

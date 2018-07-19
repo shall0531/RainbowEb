@@ -1,0 +1,8 @@
+
+<div class="messages">
+  <app-message *ngFor="let message of messages" [value]="message"></app-message>
+</div>
+<form class="bottom grid-5" [formGroup]="form">
+    <textarea class="style-edit col-4" formControlName="text" ></textarea>
+    <button class="button-send" (click)="sendMessage()">send</button>
+</form>

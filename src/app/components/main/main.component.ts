@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CoreService } from '../../services/core.service';
 import { ContactModel } from '../../models/contact.model';
+import { StateService } from '../../services/state.service';
+import { ConversationComponent } from '../conversation/conversation.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -9,49 +12,62 @@ import { ContactModel } from '../../models/contact.model';
 })
 export class MainComponent implements OnInit {
   contacts = [];
-  constructor(private coreService: CoreService) {
-    this.coreService.sdk._onReady.subscribe(value => {
-      this.coreService.sdk.onReady('liu.xiaoyi90@gmail.com', 'Pass_test_1234');
-    });
+  contactSelected = '';
+  subscription$: Subscription;
+  conversation = [];
+  @ViewChild(ConversationComponent) conversationComponent: ConversationComponent;
+  constructor(private coreService: CoreService,
+    private stateService: StateService) {
+
   }
+
 
   ngOnInit() {
-    this.contacts = this.getContacts();
+    this.getContacts();
+    this.subscription$ = this.coreService.sdk._recieveMessage.subscribe(value=>{
+      this.onNewMessageReceived('','yes', this.conversation);
+    });
+  }
+  onNewMessageReceived(event, message, conversation) {
+
+    var messageContent = "";
+
+    // Acknowledge it
+    this.coreService.sdk.rainbowSDK['im'].markMessageFromConversationAsRead(conversation, message);
+
+    // Text message received
+    messageContent = message.data;
+
+    // Send an answer 
+    this.coreService.sdk.rainbowSDK['im'].sendMessageToConversation(conversation, messageContent + " read!");
+    
+};
+  ngOnDestroy(): void {
+    this.subscription$.unsubscribe();
+    
   }
   getContacts() {
-    return [{
-      jid: 'id',
-      avatar:'',
-      name: 'jon snow',
-      imStatus: 'presence',
-      lastActivityMessage: 'hello',
-      displayName: 'jon snow'
-    },
-    {
-      jid: 'id',
-      avatar:'',
-      name: 'jon snow',
-      imStatus: 'presence',
-      lastActivityMessage: 'hello,what\'up? I just want to test how far that I can reach the text-overflow',
-      displayName: 'jon snow'
-    }, {
-      jid: 'id',
-      avatar:'',
-      name: 'jon snow',
-      imStatus: 'presence',
-      lastActivityMessage: 'hello',
-      displayName: 'jon snow'
-    }];
-    // console.log(this.coreService.sdk.contacts);
-    /*this.coreService.sdk.contacts.map(elm=>{
-      this.contacts.push({jid: elm['jid'],
-                lastname: elm['lastname'], 
-                name: elm['name']['value']
-                imStatus: elm['imStatus'],
-                elm['conversation'], elm['color'], elm['lastActivityMessage'],
-              elm['displayName']}), this.contacts);
-    });*/
-
+    console.log(this.coreService.sdk.allContacts);
+    this.coreService.sdk.allContacts.forEach(element => {
+      this.contacts.push({
+        jid: element['jid'],
+        avatar: element['avatar'],
+        name: element['name']['value'],
+        imStatus: element['imStatus']
+      });
+    });
   }
+  selectContact(jid: string) {
+    this.coreService.sdk.onContactSelected(jid)
+      .then(value => {
+        this.coreService.sdk.getConversationByContact().then(value => {
+          this.coreService.sdk.displayMessage(value).then(conversation => {
+            this.conversation = conversation
+            this.conversationComponent.displayMessage(conversation);
+          });
+        })
+      });
+  }
+
 
 }

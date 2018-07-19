@@ -1,6 +1,6 @@
 <div class="grid-4">
   <div class="left">
-      <app-contact  *ngFor="let contact of contacts" [value]="contact"></app-contact> 
+      <app-contact  *ngFor="let contact of contacts" [value]="contact" (click)="selectContact(contact['jid'])"></app-contact> 
   </div>
   
   <div class="col-3">

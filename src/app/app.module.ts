@@ -48,6 +48,7 @@ import { MainComponent } from './components/main/main.component';
 import { UserComponent } from './components/user/user.component';
 import { ConversationComponent } from './components/conversation/conversation.component';
 import { AppRoutingModule } from './app-routing.module';
+import { MessageComponent } from './components/conversation/message/message.component';
 
 const materialModule=[MatAutocompleteModule,
   MatBadgeModule,
@@ -92,7 +93,8 @@ const materialModule=[MatAutocompleteModule,
     ContactComponent,
     ConversationComponent,
     LoginComponent,
-    MainComponent
+    MainComponent,
+    MessageComponent
   ],
   imports: [
     MatNativeDateModule,
